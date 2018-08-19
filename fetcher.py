@@ -2,7 +2,7 @@ import fetcher_tjsp
 import sqlite3
 import sys
 
-create_table = '''create table if not exists leeches(
+create_table = '''create table if not exists paychecks(
                     year integer,
                     month integer,
                     source text,
@@ -32,7 +32,7 @@ def main(argv):
     print "Got %d entries" % len(result)
 
     values = [(year, month, 'TJSP', e.name, e.position, e.allocation, e.gross_pay, e.net_pay, int(e.active)) for e in result]
-    cursor.executemany('insert into leeches values (?,?,?,?,?,?,?,?,?)', values)
+    cursor.executemany('insert into paychecks values (?,?,?,?,?,?,?,?,?)', values)
     db.commit()
 
 if __name__ == "__main__":
