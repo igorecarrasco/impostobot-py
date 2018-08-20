@@ -2,7 +2,7 @@ import mechanize
 import json
 from collections import namedtuple
 
-Entry = namedtuple('Entry', 'name position allocation gross_pay net_pay active')
+Entry = namedtuple('Entry', 'name source position allocation gross_pay net_pay active')
 
 class Fetcher:
     _user_agent = 'Mozilla/5.0 (X11; U; Linux; i686; en-US; rv:1.6) Gecko Debian/1.6-7'
@@ -21,6 +21,7 @@ class Fetcher:
             for e in data['data']:
                 result.append(Entry(
                     name=e['nome'],
+                    source='TJSP',
                     position=e['folhaMagistradoCargo']['descricao'],
                     allocation=e['lotacao'],
                     gross_pay=float(e['totalCredito']),

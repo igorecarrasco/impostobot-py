@@ -1,0 +1,5 @@
+venv/*
+coverage/*
+.coverage
+.coveragerc
+.noseids

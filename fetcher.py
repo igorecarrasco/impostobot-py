@@ -1,4 +1,5 @@
 import fetcher_tjsp
+import fetcher_cnj
 import sqlite3
 import sys
 
@@ -26,14 +27,21 @@ def main(argv):
 
     cursor.execute(create_table)
 
-    fetcher = fetcher_tjsp.Fetcher()
+    # fetcher = fetcher_tjsp.Fetcher()
 
-    result = fetcher.fetch(year, month)
-    print "Got %d entries" % len(result)
+    #  Create crude list of instantiated Fetcher objects
+    fetchers = [
+        fetcher_tjsp.Fetcher(),
+        fetcher_cnj.Fetcher()]
 
-    values = [(year, month, 'TJSP', e.name, e.position, e.allocation, e.gross_pay, e.net_pay, int(e.active)) for e in result]
-    cursor.executemany('insert into paychecks values (?,?,?,?,?,?,?,?,?)', values)
-    db.commit()
+    for fetcher in fetchers:
+        dynamic_fetcher = getattr(fetcher, 'fetch')
+        result = dynamic_fetcher(year, month)
+        print "Got %d entries" % len(result)
+
+        values = [(year, month, e.source , e.name, e.position, e.allocation, e.gross_pay, e.net_pay, int(e.active)) for e in result]
+        cursor.executemany('insert into paychecks values (?,?,?,?,?,?,?,?,?)', values)
+        db.commit()
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
